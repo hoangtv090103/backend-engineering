@@ -1,32 +1,36 @@
 TCP vs UDP Crash Course
+
 # TCP (Transmission Control Protocol)
 
 ## Overview
+
 - **DB use TCP all the time**
 
 ## TCP Pros and Cons
 
 ### Pros
-* **Acknowledgment**
-    * TCP ensures that data sent from the sender is acknowledged by the receiver. After the receiver successfully receives a data packet, it sends an acknowledgment (ACK) back to the sender.
-* **Guaranteed delivery**
-    * Data sent from one device will reach the destination device without errors and in the correct order. This is done through mechanisms like acknowledgment, error-checking, and retransmission of lost or corrupted packets.
-* **Connection-based**
-    * TCP is connection-oriented, meaning a unique connection is established between the sender and receiver before any data is transmitted.
-* **Congestion control**
-    * If there are many requests, TCP waits and sends data only when the network can handle it.
-* **Ordered packets**
-    * TCP adds headers to packets and labels them to ensure they are received in order.
+
+- **Acknowledgment**
+  - TCP ensures that data sent from the sender is acknowledged by the receiver. After the receiver successfully receives a data packet, it sends an acknowledgment (ACK) back to the sender.
+- **Guaranteed delivery**
+  - Data sent from one device will reach the destination device without errors and in the correct order. This is done through mechanisms like acknowledgment, error-checking, and retransmission of lost or corrupted packets.
+- **Connection-based**
+  - TCP is connection-oriented, meaning a unique connection is established between the sender and receiver before any data is transmitted.
+- **Congestion control**
+  - If there are many requests, TCP waits and sends data only when the network can handle it.
+- **Ordered packets**
+  - TCP adds headers to packets and labels them to ensure they are received in order.
 
 ### Cons
-* **Larger packets**
-* **More bandwidth (bps)**
-    * Bandwidth is the maximum amount of data that can be transmitted over a network connection in a given amount of time.
-* **Slower than UDP**
-* **Stateful**
-    * If the connection drops, clients can’t resume their work. Both server and clients carry information about their connection.
-* **Server memory (DOS)**
-    * Need to allocate memory for each connection, which limits the number of TCP connections a server can handle.
+
+- **Larger packets**
+- **More bandwidth (bps)**
+  - Bandwidth is the maximum amount of data that can be transmitted over a network connection in a given amount of time.
+- **Slower than UDP**
+- **Stateful**
+  - If the connection drops, clients can’t resume their work. Both server and clients carry information about their connection.
+- **Server memory (DOS)**
+  - Need to allocate memory for each connection, which limits the number of TCP connections a server can handle.
 
 ## TCP Code Example
 
@@ -52,13 +56,15 @@ func handleConnection(conn net.Conn) {
 }
 
 func main() {
-    // Start listening on port 8080
-    listener, err := net.Listen("tcp", ":8080")
-    if err != nil {
-        fmt.Println("Error starting server:", err)
-        return
-    }
-    defer listener.Close()
+    // listener, err := net.Listen("tcp", ":8080")
+	listener, err := net.ListenTCP("tcp", &net.TCPAddr{
+		Port: port,
+	})
+	if err != nil {
+		fmt.Println("Error starting server:", err)
+		return
+	}
+	defer listener.Close()
 
     fmt.Println("Server is listening on port 8080...")
 
@@ -75,29 +81,32 @@ func main() {
 ```
 
 ## Use Cases
-* Texting app
-    * Requires ordered delivery
+
+- Texting app
+  - Requires ordered delivery
 
 # UDP (User Datagram Protocol)
 
 ## Pros and Cons
 
 ### Pros
-* **Smaller packets**
-* **Less bandwidth**
-* **Faster than TCP**
-* **Stateless**
+
+- **Smaller packets**
+- **Less bandwidth**
+- **Faster than TCP**
+- **Stateless**
 
 ### Cons
-* **No Acknowledgment**
-* **No Guaranteed delivery**
-    * Only performs checksum
-* **Connectionless**
-    * Client and server don’t know each other
-* **No Congestion control**
-* **No Ordered packets**
-* **Security**
-    * Lack of identification
+
+- **No Acknowledgment**
+- **No Guaranteed delivery**
+  - Only performs checksum
+- **Connectionless**
+  - Client and server don’t know each other
+- **No Congestion control**
+- **No Ordered packets**
+- **Security**
+  - Lack of identification
 
 ## UDP Code Example
 
@@ -140,8 +149,9 @@ func main() {
 ```
 
 ## Use Cases
-* Online game
-* Video streaming
-    * Applications that can tolerate some data loss
+
+- Online game
+- Video streaming
+  - Applications that can tolerate some data loss
 
 [Video Explanation](https://www.youtube.com/watch?v=qqRYkcta6IE&list=PLQnljOFTspQUNnO4p00ua_C5mKTfldiYT&index=5)
